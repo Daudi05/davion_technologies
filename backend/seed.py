@@ -34,49 +34,41 @@ def seed():
             if not Service.query.filter_by(slug=slug).first():
                 db.session.add(Service(title=title, slug=slug, icon=icon, short_desc=desc, price_from=price, order=i))
 
-        # Portfolio projects
+        # ── Portfolio projects ────────────────────────────────────────────
+        # Remove old placeholder projects so they don't show up alongside the real ones
+        old_slugs = ['mjengo-connect', 'paygo-wallet', 'duka-analytics', 'afya360', 'schoolsync', 'logitrack']
+        PortfolioProject.query.filter(PortfolioProject.slug.in_(old_slugs)).delete(synchronize_session=False)
+        db.session.commit()
+
         projects = [
-            ('Mjengo Connect', 'mjengo-connect', 'Afrimason Ltd', 'Web Application',
-             'B2B marketplace connecting construction firms with verified suppliers across East Africa.',
-             ['React', 'Flask', 'PostgreSQL', 'M-Pesa', 'Redis'],
-             'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80', True),
-            ('PayGo Wallet', 'paygo-wallet', 'FinTrust Kenya', 'Mobile App',
-             'Mobile money wallet serving 50,000+ users with instant P2P transfers and bill payments.',
-             ['React Native', 'Node.js', 'MongoDB', 'Safaricom Daraja'],
-             'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80', True),
-            ('Duka Analytics', 'duka-analytics', 'RetailEdge Africa', 'SaaS Platform',
-             'Real-time sales and inventory analytics for Kenyan SME retailers.',
-             ['Vue.js', 'Python', 'PostgreSQL', 'Chart.js', 'Celery'],
-             'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80', True),
-            ('Afya360', 'afya360', 'MedLink Africa', 'Web + Mobile',
-             'Telemedicine platform connecting patients with doctors across 6 African countries.',
-             ['React', 'React Native', 'Flask', 'PostgreSQL', 'WebRTC'],
-             'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80', False),
-            ('SchoolSync', 'schoolsync', 'Elimu Digital', 'Web Application',
-             'School management ERP managing 15,000+ students across 40 institutions.',
-             ['React', 'Django', 'PostgreSQL', 'Redis', 'Celery'],
+            ('Danis Choice', 'danis-choice', 'Danis Choice', 'E-commerce',
+             'Full e-commerce platform for a ladies fashion brand selling clothing, shoes, and bags — built with a custom storefront, cart, checkout, and admin dashboard for inventory and order management.',
+             ['React', 'Flask', 'PostgreSQL', 'Framer Motion'],
+             'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=80', True),
+            ('Nyabera Secondary School', 'nyabera-secondary-school', 'Nyabera Secondary School', 'Education',
+             'School management and information system for student records, communication, and academic administration — digitizing daily operations for the institution.',
+             ['React', 'Flask', 'PostgreSQL', 'JWT Auth'],
              'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80', True),
-            ('LogiTrack', 'logitrack', 'Speedy Logistics', 'Web + Mobile',
-             'Real-time fleet and delivery tracking system for logistics companies.',
-             ['React', 'Flask', 'PostgreSQL', 'Google Maps API', 'Socket.io'],
-             'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80', False),
+            ('Mkopo Finance', 'mkopo-finance', 'Mkopo Finance', 'Fintech',
+             'Loan management platform supporting 12 loan product types, customer onboarding, loan officer workflows, and M-Pesa-integrated repayments for a Kenyan microfinance institution.',
+             ['React', 'Flask', 'PostgreSQL', 'M-Pesa Daraja API'],
+             'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80', True),
         ]
         for title,slug,client,cat,summary,tech,img,featured in projects:
             if not PortfolioProject.query.filter_by(slug=slug).first():
                 db.session.add(PortfolioProject(
                     title=title, slug=slug, client=client, category=cat,
                     summary=summary, technologies=tech, cover_image=img, is_featured=featured,
-                    description=summary, challenge='Building for East African market constraints.',
-                    solution='We built with offline-first, mobile-first principles.',
-                    outcome='Delivered on time, 40% under projected infrastructure cost.',
+                    description=summary, challenge='Building for real-world Kenyan business constraints — low bandwidth, mobile-first users, and local payment systems.',
+                    solution='We built with offline-first, mobile-first principles tailored to the client\'s actual operating environment.',
+                    outcome='Delivered on time and fully adopted by the client\'s team and end users.',
                 ))
 
         # Testimonials
         testimonials = [
-            ('David Njoroge', 'CEO, Afrimason Ltd', 'Davion Technologies transformed our manual supplier process into a slick digital marketplace. Delivery was ahead of schedule and the team communicates like no other agency I\'ve worked with.', 5),
-            ('Wanjiru Kamau', 'CTO, FinTrust Kenya', 'The PayGo wallet handles 50,000+ daily transactions without a hiccup. The architecture they designed is enterprise-grade. Worth every shilling.', 5),
-            ('Amina Hassan', 'Product Manager, RetailEdge', 'We went from Excel spreadsheets to a real-time analytics dashboard in 8 weeks. Davion\'s team understands African SME problems better than any global agency.', 5),
-            ('James Otieno', 'Founder, Elimu Digital', 'SchoolSync went live in 40 schools simultaneously. Zero data loss, zero downtime. I\'ve since referred three other founders to Davion.', 5),
+            ('Danis Wanjiru', 'Founder, Danis Choice', 'Davion Technologies built us a storefront that actually feels premium. Our customers notice the difference, and our order management has never been smoother.', 5),
+            ('Mr. Otieno', 'Principal, Nyabera Secondary School', 'The system has completely changed how we manage student records and communicate with parents. What used to take days now takes minutes.', 5),
+            ('James Mwangi', 'Operations Manager, Mkopo Finance', 'Our loan officers process applications faster and our M-Pesa repayments reconcile automatically. This system paid for itself within months.', 5),
         ]
         for name, role, content, rating in testimonials:
             if not Testimonial.query.filter_by(name=name).first():
@@ -97,8 +89,8 @@ def seed():
              'Off-the-shelf software is built for the global average. Your business is not average.', 'Business', True),
             ('Building for M-Pesa: What Every Developer Needs to Know', 'building-for-mpesa-guide',
              'A practical guide to integrating Safaricom Daraja API without the headaches.', 'Engineering', True),
-            ('From Idea to Launch: How We Shipped AfyaConnect in 12 Weeks', 'idea-to-launch-afyaconnect',
-             'A behind-the-scenes look at our fastest product delivery.', 'Product', True),
+            ('From Idea to Launch: How We Shipped Mkopo Finance', 'idea-to-launch-mkopo-finance',
+             'A behind-the-scenes look at building a loan management platform for a Kenyan microfinance institution.', 'Product', True),
         ]
         for title, slug, excerpt, cat, published in posts:
             if not BlogPost.query.filter_by(slug=slug).first():

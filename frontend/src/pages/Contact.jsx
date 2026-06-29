@@ -24,7 +24,7 @@ const BUDGETS  = ['Under KES 50,000','KES 50k–150k','KES 150k–500k','KES 500
 
 const INFO = [
   { icon:<Mail size={18}/>,     label:'Email',    value:'ojorodavid@gmail.com',      href:'mailto:ojorodavid@gmail.com' },
-  { icon:<Phone size={18}/>,    label:'Phone',    value:'+254 757 451 584',       href:'tel:+254700000000' },
+  { icon:<Phone size={18}/>,    label:'Phone',    value:'+254 757 451 584',       href:'tel:+254757451584' },
   { icon:<MapPin size={18}/>,   label:'Office',   value:'Yaya Centre', href:null },
   { icon:<Clock size={18}/>,    label:'Hours',    value:'Mon–Fri · 8am–6pm EAT',  href:null },
 ];

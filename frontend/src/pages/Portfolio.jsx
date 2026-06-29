@@ -7,7 +7,44 @@ import { publicApi } from '../services/api';
 const fadeUp = { hidden:{opacity:0,y:32}, visible:{opacity:1,y:0,transition:{duration:.6,ease:[0.25,0.1,0.25,1]}} };
 const stagger = { hidden:{}, visible:{ transition:{ staggerChildren:.1 } } };
 
-const CATS = ['All','Web Application','Mobile App','SaaS Platform','Web + Mobile'];
+const CATS = ['All','E-commerce','Education','Fintech'];
+
+// ── Your real projects — used as fallback if the API returns nothing ───────
+const MY_PROJECTS = [
+  {
+    id: 1,
+    slug: 'danis-choice',
+    title: 'Danis Choice',
+    client: 'Danis Choice',
+    category: 'E-commerce',
+    summary: 'A full e-commerce platform for a ladies fashion brand — clothing, shoes, and bags. Built with a custom storefront, cart, checkout, and admin dashboard for managing inventory and orders.',
+    technologies: ['React', 'Flask', 'PostgreSQL', 'Framer Motion'],
+    cover_image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=80',
+    is_featured: true,
+  },
+  {
+    id: 2,
+    slug: 'nyabera-secondary-school',
+    title: 'Nyabera Secondary School',
+    client: 'Nyabera Secondary School',
+    category: 'Education',
+    summary: 'A school management and information system for student records, communication, and academic administration — built to digitize daily operations for the institution.',
+    technologies: ['React', 'Flask', 'PostgreSQL', 'JWT Auth'],
+    cover_image: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80',
+    is_featured: true,
+  },
+  {
+    id: 3,
+    slug: 'mkopo-finance',
+    title: 'Mkopo Finance',
+    client: 'Mkopo Finance',
+    category: 'Fintech',
+    summary: 'A loan management platform supporting 12 loan product types, customer onboarding, loan officer workflows, and M-Pesa-integrated repayments for a Kenyan microfinance institution.',
+    technologies: ['React', 'Flask', 'PostgreSQL', 'M-Pesa Daraja API'],
+    cover_image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80',
+    is_featured: true,
+  },
+];
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([]);
@@ -15,7 +52,16 @@ export default function Portfolio() {
   const [loading,  setLoading]  = useState(true);
 
   useEffect(() => {
-    publicApi.portfolio({ per_page:20 }).then(r => { setProjects(r.data.data); setLoading(false); }).catch(()=>setLoading(false));
+    publicApi.portfolio({ per_page: 20 })
+      .then(r => {
+        const data = r.data.data;
+        setProjects(data && data.length > 0 ? data : MY_PROJECTS);
+        setLoading(false);
+      })
+      .catch(() => {
+        setProjects(MY_PROJECTS);
+        setLoading(false);
+      });
   }, []);
 
   const filtered = cat === 'All' ? projects : projects.filter(p => p.category === cat);

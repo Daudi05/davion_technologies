@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from datetime import datetime
 from sqlalchemy import or_
 from app import db, mail, limiter
@@ -86,6 +86,7 @@ def blog_categories():
 
 
 # ── Contact ───────────────────────────────────────────────────────────
+# ── Contact ───────────────────────────────────────────────────────────
 @public_bp.post('/contact')
 @limiter.limit('5 per hour')
 def contact():
@@ -107,15 +108,17 @@ def contact():
 
     try:
         from flask_mail import Message as MailMsg
+        recipient_email = current_app.config.get('MAIL_USERNAME')
         m = MailMsg(
             subject    = f'New Enquiry from {msg.name} — Davion Technologies',
-            recipients = [mail.default_sender],
+            recipients = [recipient_email],
             body       = f'Name: {msg.name}\nEmail: {msg.email}\nPhone: {msg.phone}\nCompany: {msg.company}\nService: {msg.service}\nBudget: {msg.budget}\n\n{msg.message}'
         )
         mail.send(m)
-    except:
-        pass
-    return created("Message received! We'll be in touch within 24 hours.")
+    except Exception as e:
+        current_app.logger.error(f'Failed to send contact email: {e}')
+
+    return created(message="Message received! We'll be in touch within 24 hours.")
 
 
 # ── Jobs ──────────────────────────────────────────────────────────────

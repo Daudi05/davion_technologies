@@ -51,7 +51,7 @@ export default function About() {
             </motion.h1>
             <motion.p variants={fadeUp}
               style={{ color:'var(--text2)', maxWidth:520, lineHeight:1.85, fontSize:'1.05rem' }}>
-              Davion Technologies started in 2020 with a single conviction: Kenyan businesses deserve 
+              Davion Technologies started in 2025 with a single conviction: Kenyan businesses deserve 
               software as good as anything built in Silicon Valley — built by a team that actually 
               understands the local market.
             </motion.p>
