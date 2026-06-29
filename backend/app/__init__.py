@@ -26,7 +26,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(mes
 
 def create_app():
     app = Flask(__name__)
-
+    print("DATABASE_URL:", os.getenv("DATABASE_URL"))
     app.config.update(
         SECRET_KEY                     = os.getenv('SECRET_KEY', 'dev-secret'),
         JWT_SECRET_KEY                 = os.getenv('JWT_SECRET_KEY', 'dev-jwt'),
